@@ -1,6 +1,7 @@
 const API_WS_URL = process.env.NEXT_PUBLIC_API_WS_URL ?? "ws://localhost:8000";
 export const STT_WS_URL = `${API_WS_URL}/ws/stt`;
 export const ECHO_WS_URL = `${API_WS_URL}/ws`;
+export const AGENT_WS_URL = `${API_WS_URL}/ws/agent`;
 
 export type ChunkHandler = (pcm: ArrayBuffer, level: number) => void;
 

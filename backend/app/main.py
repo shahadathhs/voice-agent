@@ -3,7 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import routes, ws
+from app.api import routes, ws_agent
+from app.api.ws import router as echo_router
 from app.core.config import get_settings
 from app.core.logger import logger
 
@@ -31,7 +32,8 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(routes.router)
-    app.include_router(ws.router)
+    app.include_router(echo_router)
+    app.include_router(ws_agent.router)
     return app
 
 

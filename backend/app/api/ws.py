@@ -1,21 +1,18 @@
 import json
-from typing import Any
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app.core.config import get_settings
 from app.core.logger import logger
 from app.pipeline import TranscriptionSession
-from app.stt import WhisperSTT
+from app.services import stt
 
 router = APIRouter()
-
-stt = WhisperSTT()
 
 
 async def handle_control_message(websocket: WebSocket, raw: str) -> None:
     try:
-        message: dict[str, Any] = json.loads(raw)
+        message: dict = json.loads(raw)
     except json.JSONDecodeError:
         await websocket.send_json({"type": "error", "reason": "invalid_json"})
         return

@@ -7,8 +7,11 @@ services:
       - ENVIRONMENT=development
       - LOG_LEVEL=INFO
       - CORS_ORIGINS=["http://localhost:3000"]
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - MODEL_CACHE_DIR=/data/model-cache
     volumes:
       - ./backend:/app
+      - model-cache:/data/model-cache
     restart: unless-stopped
 
   web:
@@ -18,8 +21,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws
+      - NEXT_PUBLIC_API_WS_URL=ws://localhost:8000
     volumes:
       - ./web:/app
     depends_on:
       - backend
+
+volumes:
+  model-cache:

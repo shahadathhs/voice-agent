@@ -3,7 +3,7 @@
 Real-time voice agent with streaming speech-to-text, LLM orchestration and neural
 text-to-speech — natural turn-taking, barge-in support, sub-1.5s response latency.
 
-**Status:** Phase 0 — foundation. WebSocket echo pipeline live.
+**Status:** Phase 1 — live speech-to-text. Talk in your browser, see the transcript.
 
 ## The pipeline
 
@@ -47,8 +47,19 @@ make install   # backend (uv) + web (npm)
 make dev       # backend :8000 + web :3000 with hot reload
 ```
 
-Open http://localhost:3000/play, connect to `ws://localhost:8000/ws` and send a
-test chunk to verify the pipeline.
+Open http://localhost:3000/play and hit **Start talking** — the browser streams
+16kHz PCM over `/ws/stt`, the backend endpoints utterances via RMS silence
+detection and transcribes them with faster-whisper.
+
+## STT pipeline
+
+```
+mic (AudioWorklet, 16kHz PCM16) → WebSocket → RMS gate → utterance buffering
+  → silence endpointing (700ms) → faster-whisper (base, int8, CPU) → transcript event
+```
+
+Tuning knobs (env vars, see `backend/app/core/config.py`): `WHISPER_MODEL`,
+`RMS_THRESHOLD`, `SILENCE_DURATION_MS`, `MIN_UTTERANCE_MS`, `MAX_UTTERANCE_MS`.
 
 ## Development
 
@@ -63,7 +74,7 @@ make help     # list all targets
 ## Roadmap
 
 - [x] Phase 0 — monorepo scaffold, WebSocket echo, CI
-- [ ] Phase 1 — mic capture → streaming STT transcription
+- [x] Phase 1 — mic capture → streaming STT transcription
 - [ ] Phase 2 — LLM streaming + TTS playback
 - [ ] Phase 3 — VAD turn-taking, barge-in, latency instrumentation
 - [ ] Phase 4 — conversation UI polish, latency dashboard

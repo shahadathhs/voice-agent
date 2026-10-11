@@ -17,6 +17,16 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:3000"]
 
+    whisper_model: str = "base"
+    whisper_device: str = "cpu"
+    whisper_compute_type: str = "int8"
+
+    stt_sample_rate: int = 16000
+    rms_threshold: float = 0.008
+    silence_duration_ms: int = 700
+    min_utterance_ms: int = 300
+    max_utterance_ms: int = 15000
+
 
 @lru_cache
 def get_settings() -> Settings:

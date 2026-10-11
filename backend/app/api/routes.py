@@ -23,9 +23,15 @@ async def root() -> dict[str, Any]:
 
 @router.get("/health")
 async def health() -> dict[str, Any]:
+    from app.api.ws import stt
+
     settings = get_settings()
     return {
         "status": "ok",
         "version": settings.app_version,
         "environment": settings.environment,
+        "stt": {
+            "model": settings.whisper_model,
+            "loaded": stt.loaded,
+        },
     }
